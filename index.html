@@ -1,0 +1,385 @@
+HTML
+
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python asoslari — O‘quv kursi</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Chap menyu (Kurs darslari) */
+    .sidebar {
+      width: 300px;
+      background-color: #1e293b;
+      color: #e2e8f0;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .course-header {
+      padding: 20px;
+      background-color: #0f172a;
+      border-bottom: 1px solid #334155;
+    }
+
+    .course-header h2 {
+      font-size: 18px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .course-header p {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .module-title {
+      padding: 14px 20px 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+
+    .lesson-list {
+      list-style: none;
+    }
+
+    .lesson-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      padding: 12px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lesson-btn:hover {
+      background-color: #334155;
+      color: #ffffff;
+    }
+
+    .lesson-btn.active {
+      background-color: #10b981;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* O'ng asosiy maydon */
+    .main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Yuqori qadamlar paneli */
+    .top-bar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .steps {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .step-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background-color: #e2e8f0;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .step-box.done {
+      background-color: #10b981;
+      color: #ffffff;
+    }
+
+    .step-box.current {
+      background-color: #2563eb;
+      color: #ffffff;
+    }
+
+    .badge {
+      background-color: #ecfdf5;
+      color: #047857;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Dars matni */
+    .content {
+      max-width: 860px;
+      width: 100%;
+      margin: 30px auto;
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+    }
+
+    .content h1 {
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 24px;
+      color: #0f172a;
+    }
+
+    .content p {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: #334155;
+    }
+
+    .content ul {
+      margin: 15px 0 25px 25px;
+    }
+
+    .content li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: #1e293b;
+    }
+
+    code {
+      background-color: #f1f5f9;
+      color: #be185d;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+    }
+
+    pre {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 18px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 18px 0;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-prev {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .btn-next {
+      background-color: #10b981;
+      color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .content {
+        padding: 24px;
+        margin: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Chap menyu -->
+  <aside class="sidebar">
+    <div class="course-header">
+      <h2>"Python avlodi": boshlang‘ich kurs</h2>
+      <p>Kurs jarayoni: 1 / 4 dars</p>
+    </div>
+
+    <div class="module-title">1. Kurs haqida umumiy ma’lumot</div>
+    <ul class="lesson-list">
+      <li><button class="lesson-btn active" onclick="openLesson(0)">1.1 Kurs haqida</button></li>
+      <li><button class="lesson-btn" onclick="openLesson(1)">1.2 Kursni qanday o‘tish kerak</button></li>
+    </ul>
+
+    <div class="module-title">2. Ma’lumotlarni kiritish va chiqarish</div>
+    <ul class="lesson-list">
+      <li><button class="lesson-btn" onclick="openLesson(2)">2.1 Kirish. Dasturlash bilan tanishuv</button></li>
+      <li><button class="lesson-btn" onclick="openLesson(3)">2.2 print() va input() buyruqlari</button></li>
+    </ul>
+  </aside>
+
+  <!-- O'ng qism -->
+  <div class="main-area">
+    <div class="top-bar">
+      <div class="steps" id="stepsContainer"></div>
+      <div class="badge" id="lessonBadge">1.1 Kurs haqida</div>
+    </div>
+
+    <main class="content" id="lessonContent"></main>
+  </div>
+
+  <script>
+    const lessons = [
+      {
+        badge: "1.1 Kurs haqida",
+        currentStep: 1,
+        html: `
+          <h1>Kurs haqida</h1>
+          <p><strong>"Python avlodi": boshlang‘ich kurs</strong> — dasturlash olamiga ilk qadam qo‘yuvchilar uchun mo‘ljallangan o‘quv kursi.</p>
+          <p>Kurs davomida siz:</p>
+          <ul>
+            <li>Python muhitini o‘rnatish va kodni ishga tushirishni o‘rganasiz</li>
+            <li>ma’lumotlarni kiritish va ekranga chiqarish bilan ishlaysiz</li>
+            <li>sonli ma’lumot turlari <code>int</code> va <code>float</code> ni o‘zlashtirasiz</li>
+            <li>shart operatori <code>if-elif-else</code> bilan ishlashni bilib olasiz</li>
+            <li><code>for</code> va <code>while</code> sikllarini o‘rganasiz</li>
+            <li>satrli ma’lumot turi <code>str</code> bilan tanishasiz</li>
+            <li>ro‘yxatlar (lists), ularning metodlari va kesmalarini o‘rganasiz</li>
+            <li>o‘rnatilgan va foydalanuvchi funksiyalarini yaratishni o‘rganasiz</li>
+          </ul>
+          <p>Amaliy mashqlar har bir mavzuni mustahkamlashga yordam beradi.</p>
+        `
+      },
+      {
+        badge: "1.2 Kursni qanday o‘tish kerak",
+        currentStep: 3,
+        html: `
+          <h1>Kursni qanday o‘tish kerak</h1>
+          <p>Har bir darsni ketma-ketlikda o‘qish va amaliy misollarni o‘zingiz yozib ko‘rish eng yaxshi natija beradi.</p>
+          <ul>
+            <li>Nazariy qismni shoshilmasdan, diqqat bilan o‘qing</li>
+            <li>Kod namunasidagi har bir satr nimani anglatishini tushunib oling</li>
+            <li>Xatolardan qo‘rqmang — xatolar o‘rganish jarayonining tabiiy qismidir</li>
+          </ul>
+        `
+      },
+      {
+        badge: "2.1 Kirish. Dasturlash bilan tanishuv",
+        currentStep: 6,
+        html: `
+          <h1>Kirish. Dasturlash bilan tanishuv</h1>
+          <p>Dastur — bu kompyuterga qanday amallarni ketma-ket bajarish kerakligini ko‘rsatuvchi ko‘rsatmalar to‘plami.</p>
+          <p>Python — o‘qishga va yozishga qulay, sodda sintaksisga ega mashhur dasturlash tili.</p>
+          <pre>print("Salom, Python!")</pre>
+        `
+      },
+      {
+        badge: "2.2 print() va input() buyruqlari",
+        currentStep: 9,
+        html: `
+          <h1>print() va input() buyruqlari</h1>
+          <p><code>print()</code> funksiyasi ma’lumotni ekranga chiqaradi, <code>input()</code> esa foydalanuvchidan matn kiritishni so‘raydi.</p>
+          <pre>ism = input("Ismingizni kiriting: ")
+print("Salom,", ism)</pre>
+          <p><code>input()</code> qaytargan qiymat odatda satr (<code>str</code>) ko‘rinishida bo‘ladi.</p>
+        `
+      }
+    ];
+
+    let activeIndex = 0;
+
+    function renderSteps(currentStep) {
+      const stepsEl = document.getElementById("stepsContainer");
+      stepsEl.innerHTML = "";
+      for (let i = 1; i <= 12; i++) {
+        const div = document.createElement("div");
+        div.className = "step-box";
+        if (i < currentStep) div.classList.add("done");
+        else if (i === currentStep) div.classList.add("current");
+        div.textContent = i;
+        stepsEl.appendChild(div);
+      }
+    }
+
+    function openLesson(index) {
+      activeIndex = index;
+      const lesson = lessons[index];
+
+      const buttons = document.querySelectorAll(".lesson-btn");
+      buttons.forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === index);
+      });
+
+      document.getElementById("lessonBadge").textContent = lesson.badge;
+      renderSteps(lesson.currentStep);
+
+      const prevDisabled = index === 0 ? "disabled" : "";
+      const nextText = index === lessons.length - 1 ? "Kurs yakunlandi" : "Keyingi dars →";
+      const nextDisabled = index === lessons.length - 1 ? "disabled" : "";
+
+      document.getElementById("lessonContent").innerHTML = `
+        ${lesson.html}
+        <div class="nav-buttons">
+          <button class="btn btn-prev" onclick="openLesson(${index - 1})" ${prevDisabled}>← Oldingi dars</button>
+          <button class="btn btn-next" onclick="openLesson(${index + 1})" ${nextDisabled}>${nextText}</button>
+        </div>
+      `;
+    }
+
+    openLesson(0);
+  </script>
+
+</body>
+</html>
